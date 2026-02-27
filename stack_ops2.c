@@ -65,3 +65,5 @@ void    rr(t_ps *ps)
     }
     write(1, "rr\n", 3);
 }
+
+//됐나요?
