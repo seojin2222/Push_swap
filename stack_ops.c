@@ -28,19 +28,25 @@ void    sb(t_ps *ps)
 
 void    ss(t_ps *ps)
 {
+	int changed;
+
+    changed = 0;
     if (ps->a.size >= 2)
 	{
 		int tmp = ps->a.data[0];
 		ps->a.data[0] = ps->a.data[1];
 		ps->a.data[1] = tmp;
+		changed = 1;
 	}
 	if (ps->b.size >= 2)
 	{
 		int tmp = ps->b.data[0];
 		ps->b.data[0] = ps->b.data[1];
 		ps->b.data[1] = tmp;
+		changed = 1;
 	}
-    write(1, "ss\n", 3);
+	if (changed)
+        write(1, "ss\n", 3);
 }
 
 void	pa(t_ps *ps)

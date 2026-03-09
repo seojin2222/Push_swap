@@ -44,10 +44,17 @@ void	rr(t_ps *ps);
 void	rra(t_ps *ps);
 void	rrb(t_ps *ps);
 void	rrr(t_ps *ps);
+int		init_ps(t_ps *ps, int argc, char **argv);
+void	free_ps(t_ps *ps);
+int		is_sorted(t_stack *a);
+void	sort_stack(t_ps *ps);
+void	sort_two(t_ps *ps);
+void	sort_three(t_ps *ps);
+void	sort_five(t_ps *ps);
+void	sort_chunk(t_ps *ps);
 
 /*
 ** utils
 */
-int		is_sorted(t_stack *a);
 
 #endif

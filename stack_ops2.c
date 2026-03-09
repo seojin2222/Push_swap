@@ -1,4 +1,4 @@
-#include <unistd.h>
+#include "push_swap.h"
 
 void    ra(t_ps *ps)
 {
@@ -65,5 +65,37 @@ void    rr(t_ps *ps)
     }
     write(1, "rr\n", 3);
 }
+void    rra(t_ps *ps)
+{
+    int tmp;
+    int i;
 
-//됐나요? 됐다
+    if (ps->a.size < 2)
+        return ;
+    tmp = ps->a.data[ps->a.size - 1];
+    i = ps->a.size - 1;
+    while (i > 0)
+    {
+        ps->a.data[i] = ps->a.data[i - 1];
+        i--;
+    }
+    ps->a.data[0] = tmp;
+    write(1, "rra\n", 4);
+}
+void    rrb(t_ps *ps)
+{
+    int tmp;
+    int i;
+
+    if (ps->b.size < 2)
+        return ;
+    tmp = ps->b.data[ps->b.size - 1];
+    i = ps->b.size - 1;
+    while (i > 0)
+    {
+        ps->b.data[i] = ps->b.data[i - 1];
+        i--;
+    }
+    ps->b.data[0] = tmp;
+    write(1, "rrb\n", 4);
+}
