@@ -1,109 +1,93 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_ps.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seojikim <seojikim@student.42gyeongsa      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/10 17:27:40 by seojikim          #+#    #+#             */
+/*   Updated: 2026/03/10 17:27:42 by seojikim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
-static  long ft_atoi(const char *str, int *ok)
+static void	init_empty_ps(t_ps *ps)
 {
-    long    num;
-    int     sign;
-    int     i;
-
-    num = 0;
-    sign = 1;
-    i = 0;
-    *ok = 0;
-    
-    if (!str[i])
-        return (0);
-    if (str[i] == '+' || str[i] == '-')
-    {
-        if (str[i] == '-')
-            sign = -1;
-        i++;
-    }
-    if (!str[i])
-        return (0);
-    while (str[i])
-    {
-        if (str[i] < '0' || str[i] > '9')
-            return (0);
-        num = num * 10 + (str[i] - '0');
-        i++;
-    }
-    *ok = 1;
-    return (num *sign);
+	ps->a.data = 0;
+	ps->a.size = 0;
+	ps->a.cap = 0;
+	ps->b.data = 0;
+	ps->b.size = 0;
+	ps->b.cap = 0;
+	ps->n = 0;
 }
 
-static int  has_duplicate(t_stack *a)
+static int	alloc_stacks(t_ps *ps, int total)
 {
-    int i;
-    int j;
-
-    i = 0;
-    while (i < a->size)
-    {
-        j = i + 1;
-        while (j < a->size)
-        {
-            if (a->data[i] == a->data[j])
-                return (1);
-            j++;
-        }
-        i++;
-    }
-    return (0);
+	ps->n = total;
+	ps->a.data = (int *)malloc(sizeof(int) * ps->n);
+	ps->b.data = (int *)malloc(sizeof(int) * ps->n);
+	if (!ps->a.data || !ps->b.data)
+		return (0);
+	ps->a.size = ps->n;
+	ps->a.cap = ps->n;
+	ps->b.size = 0;
+	ps->b.cap = ps->n;
+	return (1);
 }
 
-static void init_empty_ps(t_ps *ps)
+static int	fill_from_split(t_ps *ps, char **split, int *idx)
 {
-    ps->a.data = 0;
-    ps->a.size = 0;
-    ps->a.cap = 0;
-    ps->b.data = 0;
-    ps->b.size = 0;
-    ps->b.cap = 0;
-    ps->n = 0;
+	int		j;
+	int		ok;
+	long	value;
+
+	j = 0;
+	while (split[j])
+	{
+		value = ft_atoi(split[j], &ok);
+		if (!ok || value < INT_MIN || value > INT_MAX)
+			return (0);
+		ps->a.data[*idx] = (int)value;
+		(*idx)++;
+		j++;
+	}
+	return (1);
 }
 
-void    free_ps(t_ps *ps)
+static int	fill_stack_a(t_ps *ps, int argc, char **argv)
 {
-    if (ps->a.data)
-        free(ps->a.data);
-    if (ps->b.data);
-        free(ps->b.data);
-    ps->a.data = 0;
-    ps->b.data = 0;
-    ps->a.size = 0;
-    ps->b.size = 0;
-    ps->a.cap = 0;
-    ps->b.cap = 0;
-    ps->n = 0;
+	char	**split;
+	int		i;
+	int		idx;
+
+	i = 1;
+	idx = 0;
+	while (i < argc)
+	{
+		split = ft_split(argv[i]);
+		if (!split)
+			return (0);
+		if (!fill_from_split(ps, split, &idx))
+			return (free_split(split), 0);
+		free_split(split);
+		i++;
+	}
+	return (!has_duplicate(&ps->a));
 }
 
-int init_ps(t_ps *ps, int argc, char **argv)
+int	init_ps(t_ps *ps, int argc, char **argv)
 {
-    int i;
-    int ok;
-    long value;
+	int	total;
 
-    init_empty_ps(ps);
-    ps->n = argc - 1;
-    ps->a.data = (int *)malloc(sizeof(int) * ps->n);
-    ps->b.data = (int *)malloc(sizeof(int) * ps->n);
-    if (!ps->a.data || !ps->b.data)
-        return (0);
-    ps->a.size = ps->n;
-    ps->a.cap = ps->n;
-    ps->b.size = 0;
-    ps->b.cap = ps->n;
-    i = 0;
-    while (i < ps->n)
-    {
-        value = ft_atoi(argv[i + 1], &ok);
-        if (!ok || value < INT_MIN || value > INT_MAX)
-            return (0);
-        ps->a.data[i] = (int)value;
-        i++;
-    }
-    if (has_duplicate(&ps->a))
-        return (0);
-    return (1);
+	init_empty_ps(ps);
+	total = count_total_numbers(argc, argv);
+	if (total <= 0)
+		return (0);
+	if (!alloc_stacks(ps, total))
+		return (0);
+	if (!fill_stack_a(ps, argc, argv))
+		return (0);
+	return (1);
 }

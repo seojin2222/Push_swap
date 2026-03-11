@@ -1,27 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_sorted.c                                        :+:      :+:    :+:   */
+/*   count_total_numbers.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: seojikim <seojikim@student.42gyeongsa      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 17:27:30 by seojikim          #+#    #+#             */
-/*   Updated: 2026/03/10 17:27:33 by seojikim         ###   ########.fr       */
+/*   Created: 2026/03/10 20:09:24 by seojikim          #+#    #+#             */
+/*   Updated: 2026/03/10 20:09:26 by seojikim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	is_sorted(t_stack *a)
+int	count_total_numbers(int argc, char **argv)
 {
-	int	i;
+	char	**split;
+	int		i;
+	int		j;
+	int		total;
 
-	i = 0;
-	while (i + 1 < a->size)
+	i = 1;
+	total = 0;
+	while (i < argc)
 	{
-		if (a->data[i] > a->data[i + 1])
+		split = ft_split(argv[i]);
+		if (!split)
 			return (0);
+		j = 0;
+		while (split[j])
+		{
+			total++;
+			j++;
+		}
+		free_split(split);
 		i++;
 	}
-	return (1);
+	return (total);
 }
